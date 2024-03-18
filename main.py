@@ -74,24 +74,19 @@ def UserForGenre(genero: str):
         return genero_buscar in genres_lista
 
     df_api2_genres = df_api2_merged[df_api2_merged['genres'].apply(buscar_genero, genero_buscar=genero)]
-    #print(df_api2_genres['genres'].value_counts())
 
     # Calculamos las horas jugadas por usuario
     horas_por_usuario = df_api2_genres.groupby('user_id')['playtime_forever'].sum()/60
-    #print(horas_por_usuario)
     
     # Encontramos el usuario con más horas jugadas
     usuario_mas_horas = horas_por_usuario.idxmax()
     max_horas = horas_por_usuario.max()
-    #print(usuario_mas_horas, max_horas)
 
     # Obtenemos las horas jugadas por año
     horas_por_ano_usuario_mas_horas = df_api2_genres[df_api2_genres['user_id'] == usuario_mas_horas].groupby('year')['playtime_forever'].sum()/60
-    #print(horas_por_ano_usuario_mas_horas)
 
     # Convertir las horas jugadas por año a un formato de lista de diccionarios
     horas_por_ano_usuario_mas_horas = horas_por_ano_usuario_mas_horas.reset_index().to_dict(orient='records')
-    #print(horas_por_ano_usuario_mas_horas)
 
     # Para presentar el resultado en el formato solicitado 
     horas_por_ano_str = ", ".join([f"{{Año: {registro['year']}, Horas: {int(registro['playtime_forever'])}}}" for registro in horas_por_ano_usuario_mas_horas if int(registro['playtime_forever']) != 0])
@@ -161,7 +156,6 @@ def UsersNotRecommend(año: int):
 
     # Seleccionamos los tres juegos con menos recomendacion 
     last_juegos = puntaje_cero_por_juego.nlargest(3)
-    #print(last_juegos)
 
     # Obtenemos los nombres de los juegos
     nombres_last_juegos = last_juegos.index.tolist()
@@ -183,14 +177,10 @@ def sentiment(año: int):
     df_api5_merged = df_api5_merged[df_api5_merged['year'] == año]
 
     # Contamos el número de veces que se repiten los valores en la columna 'sentimiento_etiqueta'
-    # conteo_valores = df_api5_merged['sentimiento_etiqueta'].value_counts()
     conteo_valores = df_api5_merged['sentimiento_etiqueta'].value_counts().to_dict()
 
     # Creamos la lista con el formato deseado
-    # resultado = {'Negative': conteo_valores.get(0, 0), 'Neutral': conteo_valores.get(1, 0), 'Positive': conteo_valores.get(2, 0)}
     resultado = {'Valor {}'.format(k): conteo_valores.get(k, 0) for k in range(3)}
-
-    #resultado = 'hola2'
 
     return resultado
 
@@ -236,6 +226,5 @@ def RecomendacionUsuario(user_id :str):
 
     # Limita las recomendaciones a los primeros 5 juegos
     top_recommendations = recommendations[:5]
-    #print(top_recommendations)
-
+    
     return top_recommendations

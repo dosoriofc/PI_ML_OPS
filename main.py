@@ -6,12 +6,7 @@ from fastapi.responses import HTMLResponse
 import pandas as pd
 import numpy as np  
 
-#import pyarrow.parquet as pq
-
-#from pydantic import BaseModel
-#from dateutil import parser
-#from typing import List
-#import os
+from sklearn.metrics.pairwise import cosine_similarity
 
 app = FastAPI()
 
@@ -181,7 +176,7 @@ def UsersNotRecommend(año: int):
 @app.get('/sentiment')
 def sentiment(año: int):
 
-    #Leemos el mismo archivo con los datos requeridos para esta funcion
+    #Leemos el archivo con los datos requeridos para esta funcion
     df_api5_merged = pd.read_parquet("./data/df_api5.parquet")
 
     # Filtramos los datos por el año indicado
@@ -199,3 +194,48 @@ def sentiment(año: int):
 
     return resultado
 
+# Endpoint de la función recomendacion_usuario 
+@app.get('/RecomendacionUsuario')
+def RecomendacionUsuario(user_id :str):
+
+    #Leemos el archivo con los datos requeridos para esta funcion
+    df_ML = pd.read_parquet("./data/df_ML.parquet")
+
+    '''
+    Proporciona una lista con 5 juegos recomendados para un usuario.
+
+    Args:
+        user_id (str): id de un usuario.
+    '''
+
+    # Crear una matriz de recomendaciones donde las filas son usuarios y las columnas son juegos
+    user_game_matrix = pd.crosstab(df_ML['user_id'], df_ML['title'])
+
+    try:
+        # Encuentra el índice del usuario en la matriz
+        user_index = user_game_matrix.index.get_loc(user_id)
+    except KeyError:
+        print(f"El usuario {user_id} no está presente en los datos.")
+        return None
+
+    # Calcula la similitud de coseno entre los usuarios
+    cosine_similarities = cosine_similarity(user_game_matrix, user_game_matrix)
+
+    # Obtén las similitudes de coseno para el usuario dado
+    similar_users = cosine_similarities[user_index]
+
+    # Encuentra los juegos que el usuario no ha calificado
+    games_played = user_game_matrix.loc[user_id]
+    unrated_games = games_played[games_played == 0].index
+
+    # Calcula las puntuaciones de recomendación sumando las similitudes de usuarios para los juegos no calificados
+    recommendation_scores = user_game_matrix.loc[:, unrated_games].multiply(similar_users, axis=0).sum(axis=0)
+
+    # Ordena las recomendaciones por puntuación descendente
+    recommendations = recommendation_scores.sort_values(ascending=False).index.tolist()
+
+    # Limita las recomendaciones a los primeros 5 juegos
+    top_recommendations = recommendations[:5]
+    #print(top_recommendations)
+
+    return top_recommendations

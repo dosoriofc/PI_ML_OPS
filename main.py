@@ -184,22 +184,26 @@ def sentiment(año: int):
 
     return resultado
 
+
 # Endpoint de la función recomendacion_usuario 
 @app.get('/RecomendacionUsuario')
 def RecomendacionUsuario(user_id :str):
 
-    #Leemos el archivo con los datos requeridos para esta funcion
-    df_ML = pd.read_parquet("./data/df_ML.parquet")
 
+    #Leemos el archivo con los datos requeridos para esta funcion
+    df_ML_2 = pd.read_parquet("./data/df_ML.parquet")
+
+    user_id = user_id.lower()
+    df_ML_2['user_id'] = df_ML_2['user_id'].str.lower()
+    
     '''
     Proporciona una lista con 5 juegos recomendados para un usuario.
 
     Args:
         user_id (str): id de un usuario.
     '''
-
     # Crear una matriz de recomendaciones donde las filas son usuarios y las columnas son juegos
-    user_game_matrix = pd.crosstab(df_ML['user_id'], df_ML['title'])
+    user_game_matrix = pd.crosstab(df_ML_2['user_id'], df_ML_2['title'])
 
     try:
         # Encuentra el índice del usuario en la matriz
@@ -209,7 +213,8 @@ def RecomendacionUsuario(user_id :str):
         return None
 
     # Calcula la similitud de coseno entre los usuarios
-    cosine_similarities = cosine_similarity(user_game_matrix, user_game_matrix)
+    #cosine_similarities = cosine_similarity(user_game_matrix, user_game_matrix)
+    cosine_similarities = cosine_similarity(user_game_matrix)
 
     # Obtén las similitudes de coseno para el usuario dado
     similar_users = cosine_similarities[user_index]
@@ -226,5 +231,6 @@ def RecomendacionUsuario(user_id :str):
 
     # Limita las recomendaciones a los primeros 5 juegos
     top_recommendations = recommendations[:5]
-    
+    #print(top_recommendations)
+
     return top_recommendations

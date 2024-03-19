@@ -21,8 +21,6 @@ En esta etapa de ingenieria de datos se realizo un proceso de ETL a partir de 3 
 - output_steam_games.json: Este archivo proporciona información detallada sobre los juegos disponibles en la plataforma Steam. Incluye datos como géneros, etiquetas, especificaciones, desarrolladores, año de lanzamiento, precio y otros atributos relevantes de cada juego
 - australian_users_items.json:  contiene información sobre los ítems relacionados con usuarios
 
-My favorite search engine is [Duck Duck Go](https://duckduckgo.com).
-
 Ver notebook: [Proceso de ETL y Resultado](https://github.com/dosoriofc/PI_ML_OPS/blob/main/ETL.ipynb)
 
 ### 2. EDA

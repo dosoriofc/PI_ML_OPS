@@ -51,9 +51,9 @@ Ver notebook: [APIs y Resultado](https://github.com/dosoriofc/PI_ML_OPS/blob/mai
 
 ### 5. Modelo de aprendizaje automático
 
-Se realizo un modelo de machine learning para armar un sistema de recomendación. El modelo toma un item, y en base a que tan similar esa ese ítem al resto, se recomiendan similares aplicando el método de la similitud del coseno. Aquí el input es un juego y el output es una lista de 5 juegos recomendados
+Se realizo un modelo de machine learning para armar un sistema de recomendación. En este caso el input es un usuario y el output es una lista de 5 juegos que se le recomienda a ese usuario, en general se explican como “A usuarios que son similares a tí también les gustó…”
 
-- **recomendacion_juego( id de producto ):** Ingresando el id de producto, se obtiene una lista con 5 juegos recomendados similares al ingresado.
+- **recomendacion_juego( id de usuario ):** Ingresando el id de usuario, se genera una lista con 5 juegos recomendados.
 
 Ver notebook: [ML y Resultado](https://github.com/dosoriofc/PI_ML_OPS/blob/main/FuncionesAPI.ipynb)
 

@@ -67,4 +67,4 @@ Link: [API y ML](https://pi-ml-ops-rfu3.onrender.com/docs)
 ### 2. Video
 Se publico un video en youtube con un breve explicacion del proyecto, la metodologia empleada y los resultados obtenidos
 
-Link: [Video en Youtube](https://pi-ml-ops-rfu3.onrender.com/docs)
+Link: [Video en Youtube](https://www.youtube.com/watch?v=N4LNb3pyJbo)
